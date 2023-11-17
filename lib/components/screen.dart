@@ -26,7 +26,10 @@ class Screen extends StatelessWidget {
         headerLeft: headerLeft,
         headerRight: headerRight,
       ),
-      body: body,
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: body,
+      ),
       bottomNavigationBar: bottomNavigationBar,
     );
   }
