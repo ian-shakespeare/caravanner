@@ -105,7 +105,7 @@ class CText {
       textAlign: textAlign ?? TextAlign.left,
       style: GoogleFonts.rubik(
         fontSize: 24,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w300,
         color: color ?? CColors.white,
       ),
     );
