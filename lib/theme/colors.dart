@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 class CColors {
+  static Color white = const Color(0xFFFFFFFF);
   static Color background = const Color(0x09090BFF);
   static Color surface = const Color(0x18181BFF);
   static Color onSurface = const Color(0x27272AFF);

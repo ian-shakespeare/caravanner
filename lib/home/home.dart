@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "../theme/text.dart";
 import "../components/screen.dart";
 
 class HomeScreen extends StatelessWidget {
@@ -7,11 +8,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext ctx) {
     return Screen(
-      headerCenter: const Text("Home"),
+      headerCenter: CText.subheading("Home"),
       body: Center(
         child: Column(
           children: <Widget>[
-            const Text("Home page!"),
+            CText.paragraph("Home page!"),
           ],
         ),
       )

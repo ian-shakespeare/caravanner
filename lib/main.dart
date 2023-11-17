@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "navigation/tab_bar.dart";
 import "home/home.dart";
-import "theme.dart";
+import "theme/colors.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
