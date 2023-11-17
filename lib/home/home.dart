@@ -7,15 +7,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext ctx) {
-    return Screen(
-      headerCenter: CText.subheading("Home"),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            CText.paragraph("Home page!"),
-          ],
-        ),
-      )
+    return  Center(
+      child: Column(
+        children: <Widget>[
+          CText.paragraph("Home page!"),
+        ],
+      ),
     );
   }
 }

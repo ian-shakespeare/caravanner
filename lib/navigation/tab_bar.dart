@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
+import "../theme/colors.dart";
 
 class CTab {
   CTab({
@@ -34,9 +35,12 @@ class _CTabBarState extends State<CTabBar> {
   Widget build(BuildContext ctx) {
     return Scaffold(
       bottomNavigationBar: Container(
-        alignment: AlignmentDirectional.topCenter,
-        height: 80,
+        alignment: AlignmentDirectional.center,
+        height: 60,
         padding: EdgeInsets.only(top: 6),
+        decoration: BoxDecoration(
+          color: CColors.surface,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: List<Widget>.from(widget.tabs.asMap().entries.map((entry) {
@@ -53,8 +57,8 @@ class _CTabBarState extends State<CTabBar> {
                 },
                 child: Icon(
                   tab.icon,
-                  color: isSelected ? null : null,
-                  size: 25
+                  color: isSelected ? CColors.primary : CColors.faded,
+                  size: 40, 
                 ),
               ),
             );
