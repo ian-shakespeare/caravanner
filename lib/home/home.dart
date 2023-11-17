@@ -1,3 +1,4 @@
+import "package:caravanner/components/text_input.dart";
 import "package:flutter/material.dart";
 import "../theme/text.dart";
 import "../components/screen.dart";
@@ -8,14 +9,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext ctx) {
     return Screen(
-      headerCenter: CText.subheading("Home"),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            CText.paragraph("Home page!"),
-          ],
-        ),
-      )
-    );
+        headerCenter: CText.subheading("Home"),
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              CText.paragraph("Home page!"),
+              const TextInput(hintText: "type something"),
+            ],
+          ),
+        ));
   }
 }
