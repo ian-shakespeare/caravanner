@@ -1,14 +1,13 @@
 import "package:flutter/material.dart";
 import "../theme/text.dart";
-import "../components/screen.dart";
 import "../components/bottom_modal.dart";
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext ctx) {
-    return  Center(
+    return Center(
       child: Column(
         children: <Widget>[
           CText.paragraph("Home page!"),

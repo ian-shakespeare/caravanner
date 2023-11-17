@@ -8,7 +8,7 @@ class Screen extends StatelessWidget {
   final Widget? headerRight;
   final Widget? bottomNavigationBar;
 
-  Screen({
+  const Screen({
     super.key,
     required this.body,
     this.headerCenter,
@@ -19,7 +19,6 @@ class Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext ctx) {
-    final theme = Theme.of(ctx);
     return Scaffold(
       appBar: CAppBar(
         headerCenter: headerCenter,
@@ -27,7 +26,7 @@ class Screen extends StatelessWidget {
         headerRight: headerRight,
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: body,
       ),
       bottomNavigationBar: bottomNavigationBar,
