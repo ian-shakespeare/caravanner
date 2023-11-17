@@ -20,7 +20,7 @@ class CTab {
 }
 
 class CTabBar extends StatefulWidget {
-  CTabBar({super.key, required this.tabs});
+  const CTabBar({super.key, required this.tabs});
 
   final List<CTab> tabs;
 
@@ -37,7 +37,7 @@ class _CTabBarState extends State<CTabBar> {
       bottomNavigationBar: Container(
         alignment: AlignmentDirectional.center,
         height: 60,
-        padding: EdgeInsets.only(top: 6),
+        padding: const EdgeInsets.only(top: 6),
         decoration: BoxDecoration(
           color: CColors.surface,
         ),

@@ -19,8 +19,9 @@ class Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext ctx) {
+    final isHeaderEmpty = headerCenter == null && headerLeft == null && headerRight == null;
     return Scaffold(
-      appBar: CAppBar(
+      appBar: isHeaderEmpty ? null : CAppBar(
         headerCenter: headerCenter,
         headerLeft: headerLeft,
         headerRight: headerRight,
