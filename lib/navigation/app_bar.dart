@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
+import "../theme/colors.dart";
 
 class CAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? headerCenter;
@@ -19,7 +20,9 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext ctx) {
     const sideButtonSize = 60.0;
     return Container(
-      decoration: null,
+      decoration: BoxDecoration(
+        color: CColors.surface,
+      ),
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),

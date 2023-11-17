@@ -58,7 +58,7 @@ class CText {
       style: GoogleFonts.rubik(
         fontSize: 16,
         fontWeight: FontWeight.w600,
-        color: color ?? const Color(0xFFFFFF80),
+        color: color ?? const Color(0x80FFFFFF),
       ),
     );
   }
@@ -82,7 +82,7 @@ class CText {
       style: GoogleFonts.rubik(
         fontSize: 14,
         fontWeight: FontWeight.w300,
-        color: color ?? const Color(0xFFFFFF80),
+        color: color ?? const Color(0x80FFFFFF),
       ),
     );
   }
