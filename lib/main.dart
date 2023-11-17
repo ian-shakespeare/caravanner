@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "navigation/tab_bar.dart";
 import "home/home.dart";
+import "theme.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +17,8 @@ class CApp extends StatelessWidget {
     return MaterialApp(
       title: "Caravanner",
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        canvasColor: CColors.background,
+        scaffoldBackgroundColor: CColors.background,
         useMaterial3: true,
       ),
       home: CTabBar(

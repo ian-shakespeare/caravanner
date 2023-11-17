@@ -2,15 +2,16 @@ import "package:flutter/material.dart";
 import "../navigation/app_bar.dart";
 
 class Screen extends StatelessWidget {
+  final Widget body;
   final Widget? headerCenter;
   final Widget? headerLeft;
   final Widget? headerRight;
-  final Widget body;
+  final Widget? bottomNavigationBar;
 
   Screen({
     super.key,
-    required this.headerTitle,
     required this.body,
+    this.headerCenter,
     this.bottomNavigationBar,
     this.headerLeft,
     this.headerRight

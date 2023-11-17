@@ -17,8 +17,9 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext ctx) {
+    const sideButtonSize = 60.0;
     return Container(
-      boxDecoration: null,
+      decoration: null,
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
@@ -41,6 +42,6 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-    ),
+    );
   }
 }
