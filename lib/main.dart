@@ -21,15 +21,7 @@ class CApp extends StatelessWidget {
         scaffoldBackgroundColor: CColors.background,
         useMaterial3: true,
       ),
-      home: CTabBar(
-        tabs: [
-          CTab(
-            icon: Icons.home_rounded,
-            screen: HomeScreen(),
-            showHeader: false,
-          ),
-        ],
-      ),
+      home: HomeScreen(),
     );
   }
 }
