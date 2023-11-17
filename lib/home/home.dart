@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "../theme/text.dart";
 import "../components/screen.dart";
+import "../components/bottom_modal.dart";
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -11,6 +12,23 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         children: <Widget>[
           CText.paragraph("Home page!"),
+          ElevatedButton(
+            child: const Text("Show Modal"),
+            onPressed: () {
+              showModalBottomSheet(
+                context: ctx,
+                builder: (modalCtx) {
+                  return BottomModal(
+                    child: Column(
+                      children: <Widget>[
+                        CText.subheading("my modal"),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
+          ),
         ],
       ),
     );
