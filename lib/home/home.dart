@@ -56,7 +56,6 @@ class _HomeScreenState extends State<_HomeScreen> {
           """,
         )
         .eq("id", widget.profile.id)
-        .order("occurs_at")
         .then((res) {
           return <Map<String, dynamic>>[...res.first["group_members"]]
               .map((e) {
