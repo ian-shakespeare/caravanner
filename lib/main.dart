@@ -1,5 +1,5 @@
+import "package:caravanner/navigation/tab_bar.dart";
 import "package:flutter/material.dart";
-import "navigation/tab_bar.dart";
 import "home/home.dart";
 import "theme/colors.dart";
 
@@ -21,7 +21,16 @@ class CApp extends StatelessWidget {
         scaffoldBackgroundColor: CColors.background,
         useMaterial3: true,
       ),
-      home: HomeScreen(),
+      home: CTabBar(tabs: [
+        CTab(icon: Icons.home_rounded, screen: HomeScreen(), showHeader: true),
+        CTab(
+            icon: Icons.calendar_today_outlined,
+            screen: HomeScreen(),
+            showHeader: true),
+        CTab(icon: Icons.groups, screen: HomeScreen(), showHeader: true),
+        CTab(icon: Icons.message, screen: HomeScreen(), showHeader: true),
+        CTab(icon: Icons.person, screen: HomeScreen(), showHeader: true)
+      ]),
     );
   }
 }
