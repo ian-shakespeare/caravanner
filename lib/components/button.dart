@@ -5,30 +5,30 @@ import "package:google_fonts/google_fonts.dart";
 
 class CButtonSecondary extends StatelessWidget {
   final String text;
-  final Widget leader;
-  final void Function() onPressed;
+  final Widget? leader;
+  final void Function()? onPressed;
   const CButtonSecondary(
       {super.key,
       required this.text,
       required this.onPressed,
-      required this.leader});
+      this.leader});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        style: ButtonStyle(
-          padding: const MaterialStatePropertyAll<EdgeInsets>(
+        style: const ButtonStyle(
+          padding: MaterialStatePropertyAll<EdgeInsets>(
               EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0)),
           backgroundColor: MaterialStatePropertyAll<Color>(CColors.onSurface),
         ),
         onPressed: onPressed,
         child: Row(
           children: [
-            leader,
+            if (leader != null) leader!,
             Expanded(
                 child: Padding(
                     padding: const EdgeInsets.only(right: 20.0),
-                    child: CText.button(text,
+                    child: CText.label(text,
                         color: Colors.white, textAlign: TextAlign.center)))
           ],
         ));
@@ -37,7 +37,7 @@ class CButtonSecondary extends StatelessWidget {
 
 class CButtonPrimary extends StatelessWidget {
   final String text;
-  final void Function() onPressed;
+  final void Function()? onPressed;
 
   const CButtonPrimary({
     super.key,
@@ -48,8 +48,8 @@ class CButtonPrimary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        style: ButtonStyle(
-          padding: const MaterialStatePropertyAll<EdgeInsets>(
+        style: const ButtonStyle(
+          padding: MaterialStatePropertyAll<EdgeInsets>(
               EdgeInsets.symmetric(vertical: 12.0, horizontal: 0.0)),
           backgroundColor: MaterialStatePropertyAll<Color>(CColors.primary),
         ),
@@ -59,7 +59,7 @@ class CButtonPrimary extends StatelessWidget {
             text,
             textAlign: TextAlign.center,
             style: GoogleFonts.rubik(
-              fontSize: 24,
+              fontSize: 20,
               fontWeight: FontWeight.w600,
               color: CColors.white,
             ),

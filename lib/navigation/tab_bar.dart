@@ -20,7 +20,7 @@ class CTab {
 }
 
 class CTabBar extends StatefulWidget {
-  CTabBar({super.key, required this.tabs});
+  const CTabBar({super.key, required this.tabs});
 
   final List<CTab> tabs;
 
@@ -35,10 +35,10 @@ class _CTabBarState extends State<CTabBar> {
   Widget build(BuildContext ctx) {
     return Scaffold(
       bottomNavigationBar: Container(
-        alignment: AlignmentDirectional.center,
-        height: 60,
-        padding: EdgeInsets.only(top: 6),
-        decoration: BoxDecoration(
+        alignment: AlignmentDirectional.topCenter,
+        height: 72,
+        padding: const EdgeInsets.only(top: 6, bottom: 12),
+        decoration: const BoxDecoration(
           color: CColors.surface,
         ),
         child: Row(
@@ -65,9 +65,7 @@ class _CTabBarState extends State<CTabBar> {
           })),
         ),
       ),
-      body: SafeArea(
-        child: List<Widget>.from(widget.tabs.map((tab) => tab.screen))[currentIndex],
-      ),
+      body: List<Widget>.from(widget.tabs.map((tab) => tab.screen))[currentIndex],
     );
   }
 }
