@@ -121,9 +121,10 @@ class _HomeScreenState extends State<_HomeScreen> {
                 padding: EdgeInsets.symmetric(vertical: 32.0),
                 child: CNextEvent(events: events),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(
-                    left: 16.0, right: 16.0, top: 32.0, bottom: 16.0),
+                    left: 16.0, right: 16.0, top: 32.0, bottom: 16.0
+                  ),
                 child: CAddEvent(onCreate: (event) {
                   setState(() {
                     events = [event, ...events];
