@@ -46,9 +46,9 @@ class _CalendarScreenState extends State<_CalendarScreen> {
         useSafeArea: true,
         backgroundColor: CColors.background,
         builder: (modalCtx) {
-          return BottomModal(child: CNewEvent(onCreate: (name, date, group) {
+          return BottomModal(child: CNewEvent(onSubmit: (event) {
             setState(() {
-              events.add(CEvent(name, date, group));
+              events.add(event);
             });
           }));
         },
@@ -59,8 +59,8 @@ class _CalendarScreenState extends State<_CalendarScreen> {
   Function(DateTime, DateTime) _onDaySelected(BuildContext ctx) {
     return (DateTime selectedDay, DateTime focusedDay) {
       final dayEvents = events.where((element) =>
-          DateUtils.dateOnly(element.Date) == DateUtils.dateOnly(selectedDay));
-      if (events.isEmpty) return;
+          DateUtils.dateOnly(element.date) == DateUtils.dateOnly(selectedDay));
+      if (dayEvents.isEmpty) return;
 
       final formattedDate = DateFormat("EEEE, d MMM `yy").format(selectedDay);
       showModalBottomSheet(
@@ -80,7 +80,7 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                 Expanded(
                     child: CList(
                   label:
-                      "${events.length} Event${events.length > 1 ? "s" : ""}",
+                      "${dayEvents.length} Event${events.length > 1 ? "s" : ""}",
                   borders: true,
                   items: dayEvents
                       .map(
@@ -143,9 +143,9 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                   return <dynamic>[...g["events"]].map(
                     (e) {
                       return CEvent(
-                        e["name"],
-                        DateTime.parse(e["occurs_at"]),
-                        CEventGroup(
+                        name: e["name"],
+                        date: DateTime.parse(e["occurs_at"]),
+                        group: CEventGroup(
                           g["id"],
                           g["group_name"],
                         ),
@@ -178,7 +178,7 @@ class _CalendarScreenState extends State<_CalendarScreen> {
             TableCalendar(
               eventLoader: (DateTime date) => events
                   .where((element) =>
-                      DateUtils.dateOnly(element.Date) ==
+                      DateUtils.dateOnly(element.date) ==
                       DateUtils.dateOnly(date))
                   .toList(),
               onDaySelected: _onDaySelected(context),

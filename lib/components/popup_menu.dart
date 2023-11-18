@@ -2,10 +2,10 @@ import 'package:caravanner/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class CPopupMenu<T> extends StatefulWidget {
-  const CPopupMenu({super.key, required this.items, required this.onSelected});
+  CPopupMenu({super.key, required this.items, required this.onSelected});
 
   final List<PopupMenuItem<T>> items;
-  final void Function(T) onSelected;
+  final Function(dynamic) onSelected;
 
   @override
   State<CPopupMenu> createState() => _PopupMenuState();
@@ -22,20 +22,19 @@ class _PopupMenuState<T> extends State<CPopupMenu<T>> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<T>(
-      color: CColors.interactive,
-      // shape: CircleBorder(),
-      iconColor: CColors.interactive,
+      position: PopupMenuPosition.under,
       icon: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            width: 40,
-            height: 40,
-            color: CColors.interactive,
-            child: const Icon(
-              Icons.edit,
-              color: CColors.white,
-            ),
-          )),
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          width: 40,
+          height: 40,
+          color: CColors.interactive,
+          child: const Icon(
+            Icons.edit,
+            color: CColors.white,
+          ),
+        ),
+      ),
       onSelected: (T item) {
         widget.onSelected(item);
       },

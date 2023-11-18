@@ -28,7 +28,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
           child: Row(
             children: <Widget>[
-              if (headerLeft != null) SizedBox.square(
+              if (headerLeft != null || headerRight != null) SizedBox.square(
                 dimension: sideButtonSize,
                 child: headerLeft!
               ),
@@ -37,7 +37,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: headerCenter ?? const Text(""),
                 ),
               ),
-              if (headerRight != null) SizedBox.square(
+              if (headerRight != null || headerRight != null) SizedBox.square(
                 dimension: sideButtonSize,
                 child: headerRight!
               ),

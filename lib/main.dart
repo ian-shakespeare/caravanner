@@ -1,3 +1,4 @@
+import "package:caravanner/navigation/tab_bar.dart";
 import "package:caravanner/auth/auth.dart";
 import "package:caravanner/auth/profile_model.dart";
 import "package:caravanner/auth/register.dart";

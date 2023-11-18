@@ -34,7 +34,8 @@ class CTextInput extends StatelessWidget {
       cursorColor: const Color.fromARGB(200, 255, 255, 255),
       decoration: InputDecoration(
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(32),
           borderSide: const BorderSide(

@@ -2,9 +2,7 @@ import "dart:io";
 
 import "package:caravanner/components/button.dart";
 import "package:caravanner/components/screen.dart";
-import "package:caravanner/components/text_input.dart";
 import "package:caravanner/theme/colors.dart";
-import "package:caravanner/theme/text.dart";
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
@@ -20,7 +18,8 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final supabase = Supabase.instance.client;
   final TextEditingController _emailInputController = TextEditingController();
-  final TextEditingController _passwordInputController = TextEditingController();
+  final TextEditingController _passwordInputController =
+      TextEditingController();
   String email = "";
   String password = "";
 
@@ -47,10 +46,11 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<AuthResponse> _googleSignIn() async {
-    const webClientId = '632718505438-3aask847dq07b6s7en1460jhav7isitn.apps.googleusercontent.com';
+    const webClientId =
+        '632718505438-3aask847dq07b6s7en1460jhav7isitn.apps.googleusercontent.com';
     final clientId = Platform.isIOS
-      ? "632718505438-t6b4041r4ff2fvu2hsolopj8pjcvgm9t.apps.googleusercontent.com"
-      : "632718505438-1g5ibt63tbsm140f8rf5k0g6fk2qdfnq.apps.googleusercontent.com";
+        ? "632718505438-t6b4041r4ff2fvu2hsolopj8pjcvgm9t.apps.googleusercontent.com"
+        : "632718505438-1g5ibt63tbsm140f8rf5k0g6fk2qdfnq.apps.googleusercontent.com";
 
     final GoogleSignIn googleSignIn = GoogleSignIn(
       clientId: clientId,
@@ -111,16 +111,19 @@ class _AuthScreenState extends State<AuthScreen> {
                       fontStyle: FontStyle.italic,
                     ),
                   ),
-                ), CButtonSecondary( text: "Continue with Google",
-                  leader: const SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: Image(image: AssetImage("images/google_logo.png")),
-                  ),
-                  onPressed: isSignedIn ? null : () {
-                    _googleSignIn();
-                  }
                 ),
+                CButtonSecondary(
+                    text: "Continue with Google",
+                    leader: const SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: Image(image: AssetImage("images/google_logo.png")),
+                    ),
+                    onPressed: isSignedIn
+                        ? null
+                        : () {
+                            _googleSignIn();
+                          }),
                 // Padding(
                 //   padding: const EdgeInsets.symmetric(vertical: 16),
                 //   child: CText.superlabel("or"),

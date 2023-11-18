@@ -1,6 +1,5 @@
 import 'package:caravanner/auth/profile_model.dart';
 import 'package:caravanner/calendar/types.dart';
-import 'package:caravanner/components/list.dart';
 import 'package:caravanner/components/popup_menu.dart';
 import 'package:caravanner/components/text_input.dart';
 import 'package:caravanner/theme/text.dart';
@@ -12,23 +11,26 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/colors.dart';
 
 class CNewEvent extends StatelessWidget {
-  const CNewEvent({super.key, required this.onCreate});
-  final void Function(String, DateTime, CEventGroup) onCreate;
+  const CNewEvent({super.key, required this.onSubmit, this.initial});
+  final void Function(CEvent) onSubmit;
+  final CEvent? initial;
 
   @override
   Widget build(BuildContext _) {
     return Consumer<ProfileModel>(
         builder: (ctx, profile, _) => _CNewEvent(
               profile: profile,
-              onCreate: onCreate,
+              onSubmit: onSubmit,
+              initial: initial,
             ));
   }
 }
 
 class _CNewEvent extends StatefulWidget {
-  const _CNewEvent({required this.profile, required this.onCreate});
-
-  final void Function(String, DateTime, CEventGroup) onCreate;
+  const _CNewEvent(
+      {required this.profile, required this.onSubmit, this.initial});
+  final CEvent? initial;
+  final void Function(CEvent) onSubmit;
   final ProfileModel profile;
 
   @override
@@ -47,9 +49,16 @@ class _CNewEventState extends State<_CNewEvent> {
 
   @override
   void initState() {
+    if (widget.initial != null) {
+      name = widget.initial!.name;
+      date = widget.initial!.date;
+      group = widget.initial!.group;
+      _nameInputController.text = name!;
+    }
+
     _nameInputController.addListener(() {
       setState(() {
-        name = _nameInputController.text.toLowerCase();
+        name = _nameInputController.text;
       });
     });
 
@@ -88,6 +97,7 @@ class _CNewEventState extends State<_CNewEvent> {
       children: [
         CTextInput(hintText: "Event Name", controller: _nameInputController),
         const SizedBox(height: 20),
+        CText.subtitle("Date"),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -96,6 +106,7 @@ class _CNewEventState extends State<_CNewEvent> {
               onPressed: () {
                 showDatePicker(
                   context: context,
+                  initialDate: DateTime.now(),
                   firstDate: DateTime.now(),
                   lastDate: DateTime(2030),
                 ).then(
@@ -116,35 +127,73 @@ class _CNewEventState extends State<_CNewEvent> {
             ),
           ],
         ),
+        SizedBox(
+          height: 20,
+        ),
         // ListView( primary: true, shrinkWrap: true, children: [
         //     Wrap(
         //       alignment: WrapAlignment.center, spacing: 3, runSpacing: 3,
         //       children: images.map((e) => Image.network(e, width: 100, height: 100 )).toList())]),
-        CListTile(label: group?.name ?? ""),
-        CPopupMenu<CEventGroup>(
-            items: groups
-                .map(
-                  (e) => PopupMenuItem<CEventGroup>(
-                    child: Text(e.name),
-                    value: e,
-                  ),
-                )
-                .toList(),
-            onSelected: (selectedGroup) {
-              setState(() {
-                group = selectedGroup;
-              });
-            }),
+        CText.subtitle("Group"),
+        // Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CText.label(group?.name ?? "Select a group...",
+                color: group == null ? CColors.faded : CColors.white),
+            CPopupMenu<CEventGroup>(
+              items: groups
+                  .map(
+                    (e) => PopupMenuItem<CEventGroup>(
+                      child: Text(e.name),
+                      value: e,
+                    ),
+                  )
+                  .toList(),
+              onSelected: (selectedGroup) {
+                setState(
+                  () {
+                    group = selectedGroup;
+                  },
+                );
+              },
+            ),
+          ],
+        ),
         Spacer(),
         FloatingActionButton(
           onPressed: () {
             if (name == null || group == null || name!.isEmpty) return;
-            widget.onCreate(name!, date, group!);
-            Navigator.pop(context);
+            final futureP = widget.initial == null
+                ? supabase.from("events").insert({
+                    "name": name,
+                    "group_id": group!.id,
+                    "occurs_at": date.toIso8601String(),
+                  })
+                : supabase.from('events').update({
+                    "name": name,
+                    "group_id": group!.id,
+                    "occurs_at": date.toIso8601String(),
+                  }).eq("id", widget.initial!.id);
+            futureP.then((value) {
+              print(value);
+              widget.onSubmit(
+                  CEvent(id: "", name: name!, date: date, group: group!));
+              Navigator.pop(context);
+            });
           },
           backgroundColor: CColors.primary,
-          child: CText.button("Create"),
-        )
+          child: CText.button(widget.initial == null ? "Create" : "Update"),
+        ),
+        widget.initial != null
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton(
+                    onPressed: () {},
+                    backgroundColor: CColors.onSurface,
+                    child: CText.button("Delete")),
+              )
+            : Text(""),
       ],
     );
   }
