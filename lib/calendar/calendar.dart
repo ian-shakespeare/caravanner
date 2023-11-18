@@ -1,11 +1,12 @@
 import "package:caravanner/components/bottom_modal.dart";
 import "package:caravanner/components/list.dart";
+import "package:caravanner/components/screen.dart";
 import "package:caravanner/theme/colors.dart";
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:intl/intl.dart";
 import "package:table_calendar/table_calendar.dart";
-import "../theme/text.dart";
+import '../theme/text.dart';
 
 Map<DateTime, List<dynamic>> kEvents = {
   DateUtils.dateOnly(DateTime.now()): [
@@ -118,44 +119,49 @@ class CalendarScreen extends StatelessWidget {
 
   List<dynamic> _getEventsForDay(DateTime date) {
     // Implementation example
-    return kEvents[DateUtils.dateOnly(date.add(Duration(days: -3)))] ?? [];
+    return kEvents[DateUtils.dateOnly(date.add(const Duration(days: -3)))] ?? [];
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          CText.title("Calendar"),
-          TableCalendar(
-            eventLoader: _getEventsForDay,
-            onDaySelected: _onDaySelected(context),
-            firstDay: DateTime.utc(2010, 10, 16),
-            lastDay: DateTime.utc(2030, 3, 14),
-            focusedDay: DateTime.now(),
-            sixWeekMonthsEnforced: true,
-            daysOfWeekStyle: DaysOfWeekStyle(
-              weekdayStyle: TextStyle(color: CColors.white),
-            ),
-            weekNumbersVisible: false,
-            calendarStyle: CalendarStyle(
-              defaultTextStyle: TextStyle(color: CColors.white),
-            ),
-            availableCalendarFormats: {CalendarFormat.month: "Month"},
-            rangeSelectionMode: RangeSelectionMode.toggledOff,
-            headerStyle: HeaderStyle(
-              leftChevronIcon: Icon(
-                Icons.chevron_left,
-                color: CColors.white,
+    return Screen(
+      headerCenter: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: CText.subheading("Calendar"),
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            TableCalendar(
+              eventLoader: _getEventsForDay,
+              onDaySelected: _onDaySelected(context),
+              firstDay: DateTime.utc(2010, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: DateTime.now(),
+              sixWeekMonthsEnforced: true,
+              daysOfWeekStyle: const DaysOfWeekStyle(
+                weekdayStyle: TextStyle(color: CColors.white),
               ),
-              rightChevronIcon: Icon(
-                Icons.chevron_right,
-                color: CColors.white,
+              weekNumbersVisible: false,
+              calendarStyle: const CalendarStyle(
+                defaultTextStyle: TextStyle(color: CColors.white),
               ),
-              titleTextStyle: GoogleFonts.rubik(color: CColors.white),
-            ),
-          )
-        ],
+              availableCalendarFormats: const {CalendarFormat.month: "Month"},
+              rangeSelectionMode: RangeSelectionMode.toggledOff,
+              headerStyle: HeaderStyle(
+                leftChevronIcon: const Icon(
+                  Icons.chevron_left,
+                  color: CColors.white,
+                ),
+                rightChevronIcon: const Icon(
+                  Icons.chevron_right,
+                  color: CColors.white,
+                ),
+                titleTextStyle: GoogleFonts.rubik(color: CColors.white),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

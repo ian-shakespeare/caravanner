@@ -1,6 +1,8 @@
 import "package:caravanner/auth/auth.dart";
 import "package:caravanner/auth/profile_model.dart";
 import "package:caravanner/auth/register.dart";
+import 'package:caravanner/calendar/calendar.dart';
+import "package:caravanner/messages/messages.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
@@ -76,13 +78,23 @@ class _CAppState extends State<CApp> {
           home: !hasSignedIn
             ? const AuthScreen()
             : needsProfileDetails
-            ? RegisterScreen()
+            ? const RegisterScreen()
             : CTabBar(
             tabs: [
               CTab(
                 icon: Icons.home_rounded,
-                screen:const HomeScreen(),
+                screen: const HomeScreen(),
                 showHeader: false,
+              ),
+              CTab(
+                icon: Icons.calendar_month_rounded,
+                screen: const CalendarScreen(),
+                showHeader: true
+              ),
+              CTab(
+                icon: Icons.message_rounded,
+                screen: const MessageScreen(),
+                showHeader: true,
               ),
             ],
           ),

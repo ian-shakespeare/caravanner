@@ -65,9 +65,7 @@ class _CTabBarState extends State<CTabBar> {
           })),
         ),
       ),
-      body: SafeArea(
-        child: List<Widget>.from(widget.tabs.map((tab) => tab.screen))[currentIndex],
-      ),
+      body: List<Widget>.from(widget.tabs.map((tab) => tab.screen))[currentIndex],
     );
   }
 }
