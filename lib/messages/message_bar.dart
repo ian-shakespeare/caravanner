@@ -45,6 +45,7 @@ class _MessageBarState extends State<MessageBar> {
                 Expanded(
                   child: TextFormField(
                     keyboardType: TextInputType.text,
+                    keyboardAppearance: Brightness.dark,
                     maxLines: null,
                     autofocus: true,
                     controller: _textController,
@@ -65,12 +66,8 @@ class _MessageBarState extends State<MessageBar> {
                         ? {"group_id": widget.chatId, "sender_id": profile.id, "message_body": _textController.text}
                         : {"recipient_id": widget.chatId, "sender_id": profile.id, "message_body": _textController.text}
                       )
-                      .then((_) => Future.delayed(const Duration(milliseconds: 300)))
-                      .then((_) => widget.scrollCtrl.animateTo(
-                        widget.scrollCtrl.position.maxScrollExtent,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.fastOutSlowIn,
-                      ));
+                      .then((_) => Future.delayed(const Duration(milliseconds: 300)));
+                      _textController.clear();
                   },
                   child: CText.button('Send'),
                 ),

@@ -33,7 +33,8 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     _messageStream = supabase
       .from(widget.isGroupChat ? "group_messages" : "direct_messages")
-      .stream(primaryKey: ["id"]);
+      .stream(primaryKey: ["id"])
+      .order("created_at", ascending: false);
     super.initState();
   }
 
@@ -75,6 +76,7 @@ class _ChatScreenState extends State<ChatScreen> {
             children: <Widget>[
               Expanded(
                 child: ListView.builder(
+                  reverse: true,
                   addAutomaticKeepAlives: true,
                   controller: _scrollController,
                   itemCount: streamSnapshot.data!.length,

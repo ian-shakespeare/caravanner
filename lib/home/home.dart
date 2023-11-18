@@ -104,18 +104,16 @@ class _HomeScreenState extends State<_HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     badges.Badge(
-                        showBadge:
-                            true //(requests.isNotEmpty || invitations.isNotEmpty),
-                        ,
+                        showBadge: false, //(requests.isNotEmpty || invitations.isNotEmpty),
                         onTap: () {},
-                        child: Icon(
-                            true //(requests.isNotEmpty || invitations.isNotEmpty)
+                        badgeStyle: const badges.BadgeStyle(badgeColor: CColors.bad),
+                        position: badges.BadgePosition.topEnd(top: 4, end: 6),
+                        child: const Icon(
+                            false //(requests.isNotEmpty || invitations.isNotEmpty)
                                 ? Icons.notifications
                                 : Icons.notifications_none,
                             size: 36,
-                            color: Colors.white),
-                        badgeStyle: badges.BadgeStyle(badgeColor: CColors.bad),
-                        position: badges.BadgePosition.topEnd(top: 4, end: 6)),
+                            color: Colors.white)),
                   ],
                 ),
               ),
@@ -123,7 +121,7 @@ class _HomeScreenState extends State<_HomeScreen> {
                 padding: EdgeInsets.symmetric(vertical: 32.0),
                 child: CNextEvent(events: events),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(
                     left: 16.0, right: 16.0, top: 32.0, bottom: 16.0),
                 child: CAddEvent(),
@@ -138,11 +136,12 @@ class _HomeScreenState extends State<_HomeScreen> {
                                 child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: events.isNotEmpty
-                                  ? CList(
-                                      label: "Upcoming Events",
-                                      items: events
+                                  ? ListView(
+                                      children: [
+                                        CText.superlabel("Upcoming Events"),
+                                        ...events
                                           .map(
-                                            (e) => CListTile(
+                                            (e) => ListTile(
                                               onTap: () {
                                                 showModalBottomSheet(
                                                   context: context,
@@ -168,25 +167,19 @@ class _HomeScreenState extends State<_HomeScreen> {
                                                   },
                                                 );
                                               },
-                                              label: e.name,
-                                              sublabel:
-                                                  DateFormat("EEEE, d MMM yyyy")
-                                                      .format(e.date),
-                                              trailing: Icon(
+                                              title: CText.title(e.name),
+                                              subtitle: CText.subtitle(
+                                                  DateFormat("EEEE, d MMM yyyy").format(e.date),
+                                              ),
+                                              trailing: const Icon(
                                                   Icons.chevron_right,
                                                   color: Colors.white),
-                                              leading: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(25.0),
-                                                child: Image.asset(
-                                                    'images/google_logo.png',
-                                                    width: 50,
-                                                    height: 50),
+                                              leading: const CircleAvatar(
+                                                child: Icon(Icons.photo, color: Colors.white),
                                               ),
                                             ),
                                           )
-                                          .toList(),
-                                      borders: true,
+                                          .toList()],
                                     )
                                   : null,
                             ))
