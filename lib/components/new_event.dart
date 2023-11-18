@@ -169,15 +169,18 @@ class _CNewEventState extends State<_CNewEvent> {
                     "name": name,
                     "group_id": group!.id,
                     "occurs_at": date.toIso8601String(),
-                  })
+                  }).select("id")
                 : supabase.from('events').update({
                     "name": name,
                     "group_id": group!.id,
                     "occurs_at": date.toIso8601String(),
                   }).eq("id", widget.initial!.id);
             futureP.then((value) {
-              widget.onSubmit(
-                  CEvent(id: "", name: name!, date: date, group: group!));
+              widget.onSubmit(CEvent(
+                  id: value?.first?["id"],
+                  name: name!,
+                  date: date,
+                  group: group!));
               Navigator.pop(context);
             });
           },
@@ -189,12 +192,15 @@ class _CNewEventState extends State<_CNewEvent> {
                 padding: const EdgeInsets.all(8.0),
                 child: FloatingActionButton(
                     onPressed: () {
-                      final futureP = supabase
+                      supabase
                           .from("events")
                           .delete()
-                          .eq("id", widget.initial!.id);
-
-                      futureP.then((value) => {Navigator.pop(context)});
+                          .eq("id", widget.initial!.id)
+                          .then((value) {
+                        widget.onSubmit(CEvent(
+                            id: null, name: name!, date: date, group: group!));
+                        Navigator.pop(context);
+                      });
                     },
                     backgroundColor: CColors.onSurface,
                     child: CText.button("Delete")),

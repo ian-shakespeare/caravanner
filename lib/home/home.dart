@@ -126,7 +126,11 @@ class _HomeScreenState extends State<_HomeScreen> {
               Padding(
                 padding: EdgeInsets.only(
                     left: 16.0, right: 16.0, top: 32.0, bottom: 16.0),
-                child: CAddEvent(),
+                child: CAddEvent(onCreate: (event) {
+                  setState(() {
+                    events = [event, ...events];
+                  });
+                }),
               ),
               Expanded(
                   child: Container(
@@ -159,10 +163,13 @@ class _HomeScreenState extends State<_HomeScreen> {
                                                               setState(() {
                                                                 events
                                                                     .remove(e);
-                                                                events = [
-                                                                  event,
-                                                                  ...events
-                                                                ];
+                                                                if (event.id !=
+                                                                    null) {
+                                                                  events = [
+                                                                    event,
+                                                                    ...events
+                                                                  ];
+                                                                }
                                                               });
                                                             }));
                                                   },
@@ -196,15 +203,15 @@ class _HomeScreenState extends State<_HomeScreen> {
 }
 
 class CAddEvent extends StatefulWidget {
-  const CAddEvent({super.key});
+  const CAddEvent({super.key, required this.onCreate});
+
+  final void Function(CEvent) onCreate;
 
   @override
   State<CAddEvent> createState() => _CAddEventState();
 }
 
 class _CAddEventState extends State<CAddEvent> {
-  final List<CEvent> events = [];
-
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -225,9 +232,7 @@ class _CAddEventState extends State<CAddEvent> {
             backgroundColor: CColors.background,
             builder: (modalCtx) {
               return BottomModal(child: CNewEvent(onSubmit: (event) {
-                setState(() {
-                  events.add(event);
-                });
+                widget.onCreate(event);
               }));
             },
           );
