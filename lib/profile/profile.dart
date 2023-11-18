@@ -9,23 +9,54 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(profile['first_name']),
+        title: const Text('Profile'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const CircleAvatar(
+              radius: 50.0,
+              child: Icon(
+                Icons.person,
+                size: 60.0,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 16.0),
             Text(
               '${profile['first_name']} ${profile['last_name']}',
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            const SizedBox(height: 8.0),
             Text(
               '${profile['handle']}',
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
+              ),
             ),
+            const SizedBox(height: 16.0),
+            const Text(
+              'Bio:',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8.0),
             Text(
-              '${profile['bio']}',
-              style: TextStyle(color: Colors.white),
+              '${profile['bio'] ?? ''}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+              ),
             ),
           ],
         ),
@@ -44,7 +75,7 @@ class YourWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile List'),
+        title: const Text('Profile List'),
       ),
       body: ListView.builder(
         itemCount: profiles.length,
@@ -53,10 +84,10 @@ class YourWidget extends StatelessWidget {
           return ListTile(
             title: Text(profile['first_name'] + ' ' + profile['last_name']),
             subtitle: Text(profile['handle']),
-            leading: CircleAvatar(
+            leading: const CircleAvatar(
               child: Icon(Icons.person),
             ),
-            trailing: Icon(Icons.arrow_forward_ios),
+            trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.push(
                 context,
