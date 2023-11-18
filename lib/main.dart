@@ -1,3 +1,4 @@
+import "package:caravanner/home/calendar.dart";
 import "package:flutter/material.dart";
 import "navigation/tab_bar.dart";
 import "home/home.dart";
@@ -27,6 +28,11 @@ class CApp extends StatelessWidget {
             icon: Icons.home_rounded,
             screen: HomeScreen(),
             showHeader: false,
+          ),
+          CTab(
+            icon: Icons.calendar_month,
+            screen: CalendarScreen(),
+            showHeader: true,
           ),
         ],
       ),
