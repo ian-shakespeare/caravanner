@@ -9,21 +9,25 @@ class CListTile extends StatelessWidget {
     this.sublabel,
     this.leading,
     this.trailing,
+    this.onTap,
   });
 
   final Widget? leading;
   final Widget? trailing;
   final String label;
   final String? sublabel;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: leading,
-      trailing: trailing,
-      title: CText.label(label),
-      subtitle: sublabel == null ? null : CText.sublabel(sublabel!),
-    );
+    return GestureDetector(
+        onTap: onTap ?? () {},
+        child: ListTile(
+          leading: leading,
+          trailing: trailing,
+          title: CText.label(label),
+          subtitle: sublabel == null ? null : CText.sublabel(sublabel!),
+        ));
   }
 }
 

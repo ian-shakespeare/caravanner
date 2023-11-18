@@ -11,23 +11,26 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../theme/colors.dart';
 
 class CNewEvent extends StatelessWidget {
-  const CNewEvent({super.key, required this.onCreate});
-  final void Function(String, DateTime, CEventGroup) onCreate;
+  const CNewEvent({super.key, required this.onSubmit, this.initial});
+  final void Function(CEvent) onSubmit;
+  final CEvent? initial;
 
   @override
   Widget build(BuildContext _) {
     return Consumer<ProfileModel>(
         builder: (ctx, profile, _) => _CNewEvent(
               profile: profile,
-              onCreate: onCreate,
+              onSubmit: onSubmit,
+              initial: initial,
             ));
   }
 }
 
 class _CNewEvent extends StatefulWidget {
-  const _CNewEvent({required this.profile, required this.onCreate});
-
-  final void Function(String, DateTime, CEventGroup) onCreate;
+  const _CNewEvent(
+      {required this.profile, required this.onSubmit, this.initial});
+  final CEvent? initial;
+  final void Function(CEvent) onSubmit;
   final ProfileModel profile;
 
   @override
@@ -46,6 +49,13 @@ class _CNewEventState extends State<_CNewEvent> {
 
   @override
   void initState() {
+    if (widget.initial != null) {
+      name = widget.initial!.name;
+      date = widget.initial!.date;
+      group = widget.initial!.group;
+      _nameInputController.text = name!;
+    }
+
     _nameInputController.addListener(() {
       setState(() {
         name = _nameInputController.text;
@@ -154,18 +164,36 @@ class _CNewEventState extends State<_CNewEvent> {
         FloatingActionButton(
           onPressed: () {
             if (name == null || group == null || name!.isEmpty) return;
-            supabase.from("events").insert({
-              "name": name,
-              "group_id": group!.id,
-              "occurs_at": date.toIso8601String(),
-            }).then((value) {
-              widget.onCreate(name!, date, group!);
+            final futureP = widget.initial == null
+                ? supabase.from("events").insert({
+                    "name": name,
+                    "group_id": group!.id,
+                    "occurs_at": date.toIso8601String(),
+                  })
+                : supabase.from('events').update({
+                    "name": name,
+                    "group_id": group!.id,
+                    "occurs_at": date.toIso8601String(),
+                  }).eq("id", widget.initial!.id);
+            futureP.then((value) {
+              print(value);
+              widget.onSubmit(
+                  CEvent(id: "", name: name!, date: date, group: group!));
               Navigator.pop(context);
             });
           },
           backgroundColor: CColors.primary,
-          child: CText.button("Create"),
-        )
+          child: CText.button(widget.initial == null ? "Create" : "Update"),
+        ),
+        widget.initial != null
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton(
+                    onPressed: () {},
+                    backgroundColor: CColors.onSurface,
+                    child: CText.button("Delete")),
+              )
+            : Text(""),
       ],
     );
   }

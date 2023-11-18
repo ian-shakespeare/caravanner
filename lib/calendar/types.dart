@@ -5,9 +5,11 @@ class CEventGroup {
 }
 
 class CEvent {
-  CEvent(this.name, this.Date, this.group);
+  CEvent(
+      {required this.name, required this.date, required this.group, this.id});
+  String? id;
   String name;
   String? image;
-  DateTime Date;
+  DateTime date;
   CEventGroup group;
 }
