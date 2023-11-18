@@ -3,17 +3,38 @@ import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 
 class CTextInput extends StatelessWidget {
+  const CTextInput({
+    super.key,
+    required this.hintText,
+    this.controller,
+    this.obscureText = false,
+    this.autocorrect = false,
+    this.maxLines = 1,
+    this.maxLength,
+    this.enabled,
+  });
+
   final String hintText;
   final TextEditingController? controller;
-  const CTextInput({super.key, required this.hintText, this.controller});
+  final bool obscureText;
+  final bool autocorrect;
+  final int maxLines;
+  final int? maxLength;
+  final bool? enabled;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      obscureText: obscureText,
+      autocorrect: autocorrect,
+      maxLines: maxLines,
+      maxLength: maxLength,
+      enabled: enabled,
       cursorColor: const Color.fromARGB(200, 255, 255, 255),
       decoration: InputDecoration(
         isDense: true,
+        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(32),
           borderSide: const BorderSide(
