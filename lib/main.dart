@@ -82,7 +82,7 @@ class _CAppState extends State<CApp> {
                       tabs: [
                         CTab(
                           icon: Icons.home_rounded,
-                          screen: const HomeScreen(),
+                          screen: HomeScreen(),
                           showHeader: false,
                         ),
                         CTab(
