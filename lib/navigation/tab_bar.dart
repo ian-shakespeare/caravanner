@@ -35,8 +35,8 @@ class _CTabBarState extends State<CTabBar> {
   Widget build(BuildContext ctx) {
     return Scaffold(
       bottomNavigationBar: Container(
-        alignment: AlignmentDirectional.center,
-        height: 60,
+        alignment: AlignmentDirectional.topCenter,
+        height: 72,
         padding: const EdgeInsets.only(top: 6, bottom: 12),
         decoration: const BoxDecoration(
           color: CColors.surface,

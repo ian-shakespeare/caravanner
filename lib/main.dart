@@ -1,7 +1,6 @@
 import "package:caravanner/auth/auth.dart";
 import "package:caravanner/auth/profile_model.dart";
 import "package:caravanner/auth/register.dart";
-import "package:caravanner/home/calendar.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
@@ -41,7 +40,6 @@ class _CAppState extends State<CApp> {
     super.initState();
     user = supabase.auth.currentUser;
     supabase.auth.onAuthStateChange.listen((data) {
-      print("auth state change! $data");
       if ([AuthChangeEvent.signedIn, AuthChangeEvent.signedOut].contains(data.event)) {
         setState(() {
           user = supabase.auth.currentUser;
@@ -86,12 +84,7 @@ class _CAppState extends State<CApp> {
                 screen:const HomeScreen(),
                 showHeader: false,
               ),
-              CTab(
-            icon: Icons.calendar_month,
-            screen: CalendarScreen(),
-            showHeader: true,
-          ),
-        ],
+            ],
           ),
         );
       },
