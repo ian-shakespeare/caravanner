@@ -1,3 +1,4 @@
+import "package:caravanner/auth/profile_model.dart";
 import "package:caravanner/components/screen.dart";
 import "package:caravanner/messages/chat_bubble.dart";
 import "package:caravanner/messages/message_bar.dart";
@@ -5,6 +6,7 @@ import "package:caravanner/messages/messages.dart";
 import "package:caravanner/theme/colors.dart";
 import "package:caravanner/theme/text.dart";
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 
 class ChatScreen extends StatefulWidget {
@@ -47,49 +49,52 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext ctx) {
     final navigator = Navigator.of(ctx);
-    return Screen(
-      headerCenter: CText.subheading(widget.chatName, textAlign: TextAlign.center),
-      headerLeft: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_rounded,
-          size: 32,
-          color: CColors.white
+    return Consumer<ProfileModel>(
+      builder: (_, profile, __) => Screen(
+        headerCenter: CText.subheading(widget.chatName, textAlign: TextAlign.center),
+        headerLeft: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            size: 32,
+            color: CColors.white
+          ),
+          onPressed: () {
+            navigator.pop();
+          },
         ),
-        onPressed: () {
-          navigator.pop();
-        },
-      ),
-      headerRight: IconButton(
-        icon: const Icon(
-          Icons.more_vert_rounded,
-          size: 32,
-          color: CColors.white
+        headerRight: IconButton(
+          icon: const Icon(
+            Icons.more_vert_rounded,
+            size: 32,
+            color: CColors.white
+          ),
+          onPressed: () {
+            navigator.pop();
+          },
         ),
-        onPressed: () {
-          navigator.pop();
-        },
-      ),
-      body: SafeArea(
-        child: StreamBuilder(stream: _messageStream, builder: (streamCtx, streamSnapshot) {
-          if (!streamSnapshot.hasData) return const SizedBox.shrink();
-          return Column(
-            children: <Widget>[
-              Expanded(
-                child: ListView.builder(
-                  reverse: true,
-                  addAutomaticKeepAlives: true,
-                  controller: _scrollController,
-                  itemCount: streamSnapshot.data!.length,
-                  itemBuilder: (_, i) {
-                    final c = streamSnapshot.data![i];
-                    return ChatBubble(senderId: c["sender_id"], messageBody: c["message_body"], createdAt: DateTime.parse(c["created_at"]));
-                  },
+        body: SafeArea(
+          child: StreamBuilder(stream: _messageStream, builder: (streamCtx, streamSnapshot) {
+            if (!streamSnapshot.hasData) return const SizedBox.shrink();
+            final items = List.from(streamSnapshot.data!.where((d) => d["group_id"] == widget.id || d["sender_id"] == widget.id || d["sender_id"] == profile.id));
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  child: ListView.builder(
+                    reverse: true,
+                    addAutomaticKeepAlives: true,
+                    controller: _scrollController,
+                    itemCount: items.length,
+                    itemBuilder: (_, i) {
+                      final c = items[i];
+                      return ChatBubble(senderId: c["sender_id"], messageBody: c["message_body"], createdAt: DateTime.parse(c["created_at"]));
+                    },
+                  ),
                 ),
-              ),
-              MessageBar(chatId: widget.id, scrollCtrl: _scrollController, isGroupChat: widget.isGroupChat),
-            ],
-          );
-        }),
+                MessageBar(chatId: widget.id, scrollCtrl: _scrollController, isGroupChat: widget.isGroupChat),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }
