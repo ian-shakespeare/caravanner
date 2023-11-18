@@ -103,17 +103,12 @@ class _HomeScreenState extends State<_HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    badges.Badge(
-                        showBadge: false, //(requests.isNotEmpty || invitations.isNotEmpty),
-                        onTap: () {},
-                        badgeStyle: const badges.BadgeStyle(badgeColor: CColors.bad),
-                        position: badges.BadgePosition.topEnd(top: 4, end: 6),
-                        child: const Icon(
-                            false //(requests.isNotEmpty || invitations.isNotEmpty)
-                                ? Icons.notifications
-                                : Icons.notifications_none,
-                            size: 36,
-                            color: Colors.white)),
+                    IconButton(onPressed: () {
+                      supabase.auth.signOut();
+                    },
+                    icon: const Icon(Icons.logout_rounded, 
+                      size: 36,
+                      color: Colors.white))
                   ],
                 ),
               ),
