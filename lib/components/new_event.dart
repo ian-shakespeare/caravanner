@@ -176,7 +176,6 @@ class _CNewEventState extends State<_CNewEvent> {
                     "occurs_at": date.toIso8601String(),
                   }).eq("id", widget.initial!.id);
             futureP.then((value) {
-              print(value);
               widget.onSubmit(
                   CEvent(id: "", name: name!, date: date, group: group!));
               Navigator.pop(context);
@@ -189,7 +188,14 @@ class _CNewEventState extends State<_CNewEvent> {
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FloatingActionButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      final futureP = supabase
+                          .from("events")
+                          .delete()
+                          .eq("id", widget.initial!.id);
+
+                      futureP.then((value) => {Navigator.pop(context)});
+                    },
                     backgroundColor: CColors.onSurface,
                     child: CText.button("Delete")),
               )
