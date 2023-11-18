@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:caravanner/components/button.dart";
 import "package:caravanner/components/screen.dart";
 import "package:caravanner/components/text_input.dart";
@@ -46,10 +48,12 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<AuthResponse> _googleSignIn() async {
     const webClientId = '632718505438-3aask847dq07b6s7en1460jhav7isitn.apps.googleusercontent.com';
-    const iosClientId = '632718505438-t6b4041r4ff2fvu2hsolopj8pjcvgm9t.apps.googleusercontent.com';
+    final clientId = Platform.isIOS
+      ? "632718505438-t6b4041r4ff2fvu2hsolopj8pjcvgm9t.apps.googleusercontent.com"
+      : "632718505438-1g5ibt63tbsm140f8rf5k0g6fk2qdfnq.apps.googleusercontent.com";
 
     final GoogleSignIn googleSignIn = GoogleSignIn(
-      clientId: iosClientId,
+      clientId: clientId,
       serverClientId: webClientId,
     );
     final googleUser = await googleSignIn.signIn();
