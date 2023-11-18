@@ -1,4 +1,5 @@
 import "package:caravanner/home/calendar.dart";
+import "package:caravanner/profile/profile.dart";
 import "package:flutter/material.dart";
 import "navigation/tab_bar.dart";
 import "home/home.dart";
@@ -34,6 +35,10 @@ class CApp extends StatelessWidget {
             screen: CalendarScreen(),
             showHeader: true,
           ),
+          CTab(
+              icon: Icons.person,
+              screen: ProfileScreen(),
+              showHeader: true)
         ],
       ),
     );
