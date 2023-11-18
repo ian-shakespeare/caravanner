@@ -66,6 +66,8 @@ class _HomeScreenState extends State<_HomeScreen> {
                   final Map<String, dynamic> data = snapshot.data![0];
                   final List<dynamic> requests = data['friend_requests'];
                   final List<dynamic> invitations = data['group_invitations'];
+                  final rids = requests.map((r) => r['id']);
+                  final iids = invitations.map((r) => r['id']);
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0, right: 8.0),
                     child: Row(
