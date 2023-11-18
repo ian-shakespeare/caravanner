@@ -7,6 +7,7 @@ import "package:caravanner/theme/colors.dart";
 import "package:caravanner/theme/text.dart";
 import "package:flutter/material.dart";
 import 'package:badges/badges.dart' as badges;
+import "package:intl/intl.dart";
 import "package:provider/provider.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 
@@ -30,8 +31,6 @@ class _HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<_HomeScreen> {
   final supabase = Supabase.instance.client;
-  late final PostgrestTransformBuilder<dynamic> _futureData;
-  late final PostgrestTransformBuilder<dynamic> _futureNotificationData;
   List<CEvent> events = [];
 
   @override
@@ -65,9 +64,10 @@ class _HomeScreenState extends State<_HomeScreen> {
                   return <dynamic>[...g["events"]].map(
                     (e) {
                       return CEvent(
-                        e["name"],
-                        DateTime.parse(e["occurs_at"]),
-                        CEventGroup(
+                        id: e['id'],
+                        name: e["name"],
+                        date: DateTime.parse(e["occurs_at"]),
+                        group: CEventGroup(
                           g["id"],
                           g["group_name"],
                         ),
@@ -143,9 +143,35 @@ class _HomeScreenState extends State<_HomeScreen> {
                                       items: events
                                           .map(
                                             (e) => CListTile(
-                                              onTap: () {},
+                                              onTap: () {
+                                                showModalBottomSheet(
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  showDragHandle: true,
+                                                  useSafeArea: true,
+                                                  backgroundColor:
+                                                      CColors.background,
+                                                  builder: (modalCtx) {
+                                                    return BottomModal(
+                                                        child: CNewEvent(
+                                                            initial: e,
+                                                            onSubmit: (event) {
+                                                              setState(() {
+                                                                events
+                                                                    .remove(e);
+                                                                events = [
+                                                                  event,
+                                                                  ...events
+                                                                ];
+                                                              });
+                                                            }));
+                                                  },
+                                                );
+                                              },
                                               label: e.name,
-                                              sublabel: e.Date.toString(),
+                                              sublabel:
+                                                  DateFormat("EEEE, d MMM yyyy")
+                                                      .format(e.date),
                                               trailing: Icon(
                                                   Icons.chevron_right,
                                                   color: Colors.white),
@@ -198,10 +224,9 @@ class _CAddEventState extends State<CAddEvent> {
             useSafeArea: true,
             backgroundColor: CColors.background,
             builder: (modalCtx) {
-              return BottomModal(
-                  child: CNewEvent(onCreate: (name, date, group) {
+              return BottomModal(child: CNewEvent(onSubmit: (event) {
                 setState(() {
-                  events.add(CEvent(name, date, group));
+                  events.add(event);
                 });
               }));
             },
@@ -247,7 +272,7 @@ class _CNextEventState extends State<CNextEvent> {
     int daysUntil = 0;
     DateTime? currentDate = DateTime.now();
     daysUntil = widget.events.isNotEmpty
-        ? widget.events[0].Date.difference(currentDate).inDays
+        ? widget.events[0].date.difference(currentDate).inDays
         : 999;
     return Material(
         type: MaterialType.transparency,
