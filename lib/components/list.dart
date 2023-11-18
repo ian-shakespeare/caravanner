@@ -41,25 +41,29 @@ class CList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      if (label != null && label!.isNotEmpty)
-        CText.superlabel(label!, textAlign: TextAlign.left),
-      Expanded(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (label != null && label!.isNotEmpty)
+          CText.superlabel(label!, textAlign: TextAlign.left),
+        Expanded(
           child: ListView.builder(
-        itemCount: items.length,
-        prototypeItem: items.first,
-        itemBuilder: (context, index) {
-          return borders == false
-              ? items[index]
-              : Container(
-                  decoration: BoxDecoration(
-                      border: borders
-                          ? Border(bottom: BorderSide(color: CColors.faded))
-                          : Border.all()),
-                  child: items[index],
-                );
-        },
-      )),
-    ]);
+            itemCount: items.length,
+            prototypeItem: items.first,
+            itemBuilder: (context, index) {
+              return borders == false
+                  ? items[index]
+                  : Container(
+                      decoration: BoxDecoration(
+                          border: borders
+                              ? Border(bottom: BorderSide(color: CColors.faded))
+                              : Border.all()),
+                      child: items[index],
+                    );
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

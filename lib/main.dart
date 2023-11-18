@@ -15,7 +15,8 @@ void main() async {
 
   await Supabase.initialize(
     url: "https://jwvwflixycnmbzxgbcqb.supabase.co",
-    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3dndmbGl4eWNubWJ6eGdiY3FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAyNDE4MTMsImV4cCI6MjAxNTgxNzgxM30.cR4Pn44efjW4GFVkz6eJQQWL-NkwvNAIbALy1TBeor0",
+    anonKey:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3dndmbGl4eWNubWJ6eGdiY3FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAyNDE4MTMsImV4cCI6MjAxNTgxNzgxM30.cR4Pn44efjW4GFVkz6eJQQWL-NkwvNAIbALy1TBeor0",
   );
 
   runApp(MultiProvider(
@@ -42,7 +43,8 @@ class _CAppState extends State<CApp> {
     super.initState();
     user = supabase.auth.currentUser;
     supabase.auth.onAuthStateChange.listen((data) {
-      if ([AuthChangeEvent.signedIn, AuthChangeEvent.signedOut].contains(data.event)) {
+      if ([AuthChangeEvent.signedIn, AuthChangeEvent.signedOut]
+          .contains(data.event)) {
         setState(() {
           user = supabase.auth.currentUser;
         });
@@ -58,15 +60,11 @@ class _CAppState extends State<CApp> {
       builder: (_, profile, __) {
         final needsProfileDetails = profile.id == null;
         if (hasSignedIn && needsProfileDetails) {
-          supabase
-            .from("profiles")
-            .select()
-            .eq("user_id", user.id)
-            .then((res) {
-              if (res.length <= 0) return;
-              final p = res[0];
-              profile.set(p ?? {});
-            });
+          supabase.from("profiles").select().eq("user_id", user.id).then((res) {
+            if (res.length <= 0) return;
+            final p = res[0];
+            profile.set(p ?? {});
+          });
         }
         return MaterialApp(
           title: "Caravanner",
@@ -76,28 +74,27 @@ class _CAppState extends State<CApp> {
             useMaterial3: true,
           ),
           home: !hasSignedIn
-            ? const AuthScreen()
-            : needsProfileDetails
-            ? const RegisterScreen()
-            : CTabBar(
-            tabs: [
-              CTab(
-                icon: Icons.home_rounded,
-                screen: const HomeScreen(),
-                showHeader: false,
-              ),
-              CTab(
-                icon: Icons.calendar_month_rounded,
-                screen: const CalendarScreen(),
-                showHeader: true
-              ),
-              CTab(
-                icon: Icons.message_rounded,
-                screen: const MessageScreen(),
-                showHeader: true,
-              ),
-            ],
-          ),
+              ? const AuthScreen()
+              : needsProfileDetails
+                  ? const RegisterScreen()
+                  : CTabBar(
+                      tabs: [
+                        CTab(
+                          icon: Icons.home_rounded,
+                          screen: const HomeScreen(),
+                          showHeader: false,
+                        ),
+                        CTab(
+                            icon: Icons.calendar_month_rounded,
+                            screen: const CalendarScreen(),
+                            showHeader: true),
+                        CTab(
+                          icon: Icons.message_rounded,
+                          screen: const MessageScreen(),
+                          showHeader: true,
+                        ),
+                      ],
+                    ),
         );
       },
     );
