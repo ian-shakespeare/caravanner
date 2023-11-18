@@ -1,5 +1,8 @@
 import "package:caravanner/auth/profile_model.dart";
+import "package:caravanner/calendar/types.dart";
+import "package:caravanner/components/bottom_modal.dart";
 import "package:caravanner/components/list.dart";
+import "package:caravanner/components/new_event.dart";
 import "package:caravanner/theme/colors.dart";
 import "package:caravanner/theme/text.dart";
 import "package:flutter/material.dart";
@@ -29,21 +32,60 @@ class _HomeScreenState extends State<_HomeScreen> {
   final supabase = Supabase.instance.client;
   late final PostgrestTransformBuilder<dynamic> _futureData;
   late final PostgrestTransformBuilder<dynamic> _futureNotificationData;
+  List<CEvent> events = [];
 
   @override
+  @override
   void initState() {
-    _futureData = supabase
-        .from("events")
+    supabase
+        .from("profiles")
         .select(
-            "id, name, occurs_at, group:group_id!inner( group_name, group_members:group_members!group_members_group_id_fkey( member_id ))")
-        .eq("group.group_members.member_id", widget.profile.id)
-        .order("occurs_at");
-
-    _futureNotificationData = supabase.from("profiles").select("""
-          id,
-          friend_requests!friend_requests_recipient_id_fkey(id),
-          group_invitations!group_invitations_recipient_id_fkey(id)
-        """).eq("id", widget.profile.id).order("created_at");
+          """
+            id,
+            group_members (
+              groups (
+                id,
+                group_name,
+                events (
+                  id,
+                  name,
+                  occurs_at
+                )
+              )
+            )
+          """,
+        )
+        .eq("id", widget.profile.id)
+        .order("occurs_at")
+        .then((res) {
+          return <Map<String, dynamic>>[...res.first["group_members"]]
+              .map((e) {
+                return <Map<String, dynamic>>[
+                  e["groups"],
+                ].map((g) {
+                  return <dynamic>[...g["events"]].map(
+                    (e) {
+                      return CEvent(
+                        e["name"],
+                        DateTime.parse(e["occurs_at"]),
+                        CEventGroup(
+                          g["id"],
+                          g["group_name"],
+                        ),
+                      );
+                    },
+                  ).toList();
+                }).toList();
+              })
+              .toList()
+              .fold(<List<CEvent>>[], (acc, e) => [...acc, ...e])
+              .fold(<CEvent>[], (acc, e) => [...acc, ...e])
+              .toList();
+        })
+        .then((d) => setState(() {
+              events = d;
+            }));
+    super.initState();
   }
 
   @override
@@ -57,46 +99,30 @@ class _HomeScreenState extends State<_HomeScreen> {
               ),
             ),
             child: Column(children: [
-              FutureBuilder(
-                future: _futureNotificationData,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  final Map<String, dynamic> data = snapshot.data![0];
-                  final List<dynamic> requests = data['friend_requests'];
-                  final List<dynamic> invitations = data['group_invitations'];
-                  final rids = requests.map((r) => r['id']);
-                  final iids = invitations.map((r) => r['id']);
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8.0, right: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        badges.Badge(
-                            showBadge:
-                                (requests.isNotEmpty || invitations.isNotEmpty),
-                            onTap: () {},
-                            child: Icon(
-                                (requests.isNotEmpty || invitations.isNotEmpty)
-                                    ? Icons.notifications
-                                    : Icons.notifications_none,
-                                size: 36,
-                                color: Colors.white),
-                            badgeStyle:
-                                badges.BadgeStyle(badgeColor: CColors.bad),
-                            position:
-                                badges.BadgePosition.topEnd(top: 4, end: 6)),
-                      ],
-                    ),
-                  );
-                },
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, right: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    badges.Badge(
+                        showBadge:
+                            true //(requests.isNotEmpty || invitations.isNotEmpty),
+                        ,
+                        onTap: () {},
+                        child: Icon(
+                            true //(requests.isNotEmpty || invitations.isNotEmpty)
+                                ? Icons.notifications
+                                : Icons.notifications_none,
+                            size: 36,
+                            color: Colors.white),
+                        badgeStyle: badges.BadgeStyle(badgeColor: CColors.bad),
+                        position: badges.BadgePosition.topEnd(top: 4, end: 6)),
+                  ],
+                ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 32.0),
-                child: CNextEvent(
-                  futureData: _futureData,
-                ),
+                child: CNextEvent(events: events),
               ),
               Padding(
                 padding: EdgeInsets.only(
@@ -107,53 +133,52 @@ class _HomeScreenState extends State<_HomeScreen> {
                   child: Container(
                       decoration: BoxDecoration(color: Colors.black),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          FutureBuilder(
-                            future: _futureData,
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              }
-                              final List<dynamic> events = snapshot.data!;
-                              final _e = events
-                                  .map(
-                                    (e) => CListTile(
-                                      label: e['name'],
-                                      sublabel: e['occurs_at'],
-                                      trailing: Icon(Icons.chevron_right,
-                                          color: Colors.white),
-                                      leading: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                        child: Image.asset(
-                                            'images/google_logo.png',
-                                            width: 50,
-                                            height: 50),
-                                      ),
-                                    ),
-                                  )
-                                  .toList();
-                              return Expanded(
-                                  child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CList(
-                                  label: "Upcoming Events",
-                                  items: _e,
-                                  borders: true,
-                                ),
-                              ));
-                            },
-                          ),
-                        ],
-                      )))
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(
+                                child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: events.isNotEmpty
+                                  ? CList(
+                                      label: "Upcoming Events",
+                                      items: events
+                                          .map(
+                                            (e) => CListTile(
+                                              onTap: () {},
+                                              label: e.name,
+                                              sublabel: e.Date.toString(),
+                                              trailing: Icon(
+                                                  Icons.chevron_right,
+                                                  color: Colors.white),
+                                              leading: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(25.0),
+                                                child: Image.asset(
+                                                    'images/google_logo.png',
+                                                    width: 50,
+                                                    height: 50),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                      borders: true,
+                                    )
+                                  : null,
+                            ))
+                          ])))
             ])));
   }
 }
 
-class CAddEvent extends StatelessWidget {
+class CAddEvent extends StatefulWidget {
   const CAddEvent({super.key});
+
+  @override
+  State<CAddEvent> createState() => _CAddEventState();
+}
+
+class _CAddEventState extends State<CAddEvent> {
+  final List<CEvent> events = [];
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +191,23 @@ class CAddEvent extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            showDragHandle: true,
+            useSafeArea: true,
+            backgroundColor: CColors.background,
+            builder: (modalCtx) {
+              return BottomModal(
+                  child: CNewEvent(onCreate: (name, date, group) {
+                setState(() {
+                  events.add(CEvent(name, date, group));
+                });
+              }));
+            },
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
@@ -194,59 +235,47 @@ class CAddEvent extends StatelessWidget {
 }
 
 class CNextEvent extends StatefulWidget {
-  final PostgrestTransformBuilder futureData;
-  const CNextEvent({super.key, required this.futureData});
+  List<CEvent> events = [];
+  CNextEvent({super.key, required this.events});
 
   @override
   State<CNextEvent> createState() => _CNextEventState();
 }
 
 class _CNextEventState extends State<CNextEvent> {
-  late final int daysUntil;
-
   @override
   Widget build(BuildContext context) {
+    int daysUntil = 0;
+    DateTime? currentDate = DateTime.now();
+    daysUntil = widget.events.isNotEmpty
+        ? widget.events[0].Date.difference(currentDate).inDays
+        : 999;
     return Material(
-      type: MaterialType.transparency,
-      child: FutureBuilder(
-        future: widget.futureData,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final List<dynamic> events = snapshot.data!;
-          final DateTime? firstEventDate =
-              DateTime.parse(events[0]['occurs_at']);
-          DateTime? currentDate = DateTime.now();
-          daysUntil = firstEventDate?.difference(currentDate).inDays ?? 0;
-          bool eventsExist = events[0].isNotEmpty;
-          return Column(
-            children: [
-              CText.heading(
-                  eventsExist
-                      ? daysUntil > 1
-                          ? '🤩'
-                          : '🤠'
-                      : '😔',
-                  textAlign: TextAlign.center),
-              CText.heading(
-                  eventsExist
-                      ? daysUntil > 1
-                          ? daysUntil.toString() + " days"
-                          : 'Event Today'
-                      : 'No Events',
-                  textAlign: TextAlign.center),
-              CText.subheading(
-                  eventsExist
-                      ? daysUntil > 1
-                          ? 'Until your next event'
-                          : 'Have a great time!'
-                      : 'Go to your Calender\n to make one!',
-                  textAlign: TextAlign.center)
-            ],
-          );
-        },
-      ),
-    );
+        type: MaterialType.transparency,
+        child: Column(
+          children: [
+            CText.heading(
+                widget.events.isNotEmpty
+                    ? daysUntil > 1
+                        ? '🤩'
+                        : '🤠'
+                    : '😔',
+                textAlign: TextAlign.center),
+            CText.heading(
+                widget.events.isNotEmpty
+                    ? daysUntil > 1
+                        ? daysUntil.toString() + " days"
+                        : 'Event Today'
+                    : 'No Events',
+                textAlign: TextAlign.center),
+            CText.subheading(
+                widget.events.isNotEmpty
+                    ? daysUntil > 1
+                        ? 'Until your next event'
+                        : 'Have a great time!'
+                    : 'Go to your Calender\n to make one!',
+                textAlign: TextAlign.center)
+          ],
+        ));
   }
 }
