@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:caravanner/auth/profile_model.dart';
 import 'package:caravanner/components/list.dart';
+import 'package:caravanner/components/screen.dart';
 import 'package:caravanner/profile/profile.dart';
 import 'package:caravanner/theme/colors.dart';
 import 'package:caravanner/theme/text.dart';
@@ -69,10 +70,11 @@ class _PeopleScreenState extends State<_PeopleScreen> {
   @override
   void initState() {
     _futureData = supabase.from("profiles").select("""
-        first_name,
-        last_name,
-        handle
-      """);
+      id,
+      first_name,
+      last_name,
+      handle
+    """);
     super.initState();
   }
 
@@ -94,44 +96,45 @@ class _PeopleScreenState extends State<_PeopleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: CText.title('People'),
-        backgroundColor: CColors.primary,
+    return Screen(
+      headerCenter: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: CText.subheading("People"),
       ),
       body: FutureBuilder<dynamic>(
-          future: _futureData,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            final profiles = snapshot.data!;
-            return ListView.builder(
-              itemCount: profiles.length,
-              itemBuilder: ((context, index) {
-                final profile = profiles[index];
-                return ListTile(
-                  title: CText.title(
-                      profile['first_name'] + ' ' + profile['last_name'],
-                      color: CColors.white),
-                  subtitle:
-                      CText.subtitle(profile['handle'], color: CColors.white),
-                  leading: const CircleAvatar(
-                    child: Icon(Icons.person, color: Colors.white),
-                  ),
-                  trailing: Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailScreen(profile: profile),
-                      ),
-                    );
-                  },
-                );
-              }),
-            );
-          }),
+        future: _futureData,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final profiles = snapshot.data!;
+          return ListView.builder(
+            itemCount: profiles.length,
+            itemBuilder: ((context, index) {
+              final profile = profiles[index];
+              return ListTile(
+                title: CText.title(
+                  "${profile["first_name"][0].toUpperCase()}${profile["first_name"].substring(1)} ${profile["last_name"][0].toUpperCase()}${profile["last_name"].substring(1)}",
+                  color: CColors.white,
+                ),
+                subtitle:
+                    CText.subtitle(profile['handle'], color: CColors.white),
+                leading: const CircleAvatar(
+                  child: Icon(Icons.person, color: Colors.white),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios, color: CColors.white),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailScreen(profile: profile),
+                    ),
+                  );
+                },
+              );
+            }),
+          );
+        }),
     );
   }
 }

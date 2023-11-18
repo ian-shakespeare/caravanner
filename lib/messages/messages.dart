@@ -118,7 +118,7 @@ class _MessageScreenState extends State<_MessageScreen> {
           final friendName = dm["recipient_id"] != widget.profile.id
             ? dm["recipient"]["first_name"]
             : dm["sender"]["first_name"];
-          final idInList = directMessages.map((dm) => id == dm.id).isNotEmpty;
+          final idInList = directMessages.where((dm) => id == dm.id).isNotEmpty;
           if (!idInList) {
             directMessages.add(
               Chat(
@@ -144,27 +144,26 @@ class _MessageScreenState extends State<_MessageScreen> {
       ),
       body: Expanded(
         child: ListView(children: List<Widget>.from(
-            chats.map((c) => GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  ctx,
-                  MaterialPageRoute(
-                    builder: (_) => ChatScreen(
-                      chatName: c.title,
-                      id: c.id,
-                      isGroupChat: c.isGroupChat,
-                    ),
-                  ),
-                );
-              },
-              child: CListTile(
-                label: c.title,
-                sublabel: c.subtitle,
-                trailing: const Icon(
-                  Icons.arrow_right_rounded,
-                  color: CColors.white, size: 32
+            chats.map((c) => ListTile(
+                leading: const CircleAvatar(
+                  child: Icon(Icons.person, color: Colors.white),
                 ),
-              )),
+                title: CText.title(c.title),
+                subtitle: CText.subtitle(c.subtitle),
+                trailing: const Icon(Icons.arrow_forward_ios, color: CColors.white),
+                onTap: () {
+                  Navigator.push(
+                    ctx,
+                    MaterialPageRoute(
+                      builder: (_) => ChatScreen(
+                        chatName: c.title,
+                        id: c.id,
+                        isGroupChat: c.isGroupChat,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),

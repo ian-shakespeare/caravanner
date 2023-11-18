@@ -22,7 +22,6 @@ class _PopupMenuState<T> extends State<CPopupMenu<T>> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<T>(
-      iconColor: CColors.interactive,
       position: PopupMenuPosition.under,
       icon: ClipRRect(
         borderRadius: BorderRadius.circular(20),

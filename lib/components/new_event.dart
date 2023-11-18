@@ -96,6 +96,7 @@ class _CNewEventState extends State<_CNewEvent> {
               onPressed: () {
                 showDatePicker(
                   context: context,
+                  initialDate: DateTime.now(),
                   firstDate: DateTime.now(),
                   lastDate: DateTime(2030),
                 ).then(

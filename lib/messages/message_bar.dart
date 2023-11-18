@@ -59,7 +59,6 @@ class _MessageBarState extends State<MessageBar> {
                 ),
                 TextButton(
                   onPressed: () {
-                    print("sending message");
                     supabase
                       .from(widget.isGroupChat ? "group_messages" : "direct_messages")
                       .insert(widget.isGroupChat
