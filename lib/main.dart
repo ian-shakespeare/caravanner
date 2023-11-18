@@ -4,6 +4,7 @@ import "package:caravanner/auth/profile_model.dart";
 import "package:caravanner/auth/register.dart";
 import 'package:caravanner/calendar/calendar.dart';
 import "package:caravanner/messages/messages.dart";
+import "package:caravanner/profile/people.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
@@ -94,6 +95,10 @@ class _CAppState extends State<CApp> {
                           screen: const MessageScreen(),
                           showHeader: true,
                         ),
+                        CTab(
+                            icon: Icons.people,
+                            screen: const PeopleScreen(),
+                            showHeader: true)
                       ],
                     ),
         );

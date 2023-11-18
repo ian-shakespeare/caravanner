@@ -1,6 +1,5 @@
 import 'package:caravanner/auth/profile_model.dart';
 import 'package:caravanner/calendar/types.dart';
-import 'package:caravanner/components/list.dart';
 import 'package:caravanner/components/popup_menu.dart';
 import 'package:caravanner/components/text_input.dart';
 import 'package:caravanner/theme/text.dart';
@@ -49,7 +48,7 @@ class _CNewEventState extends State<_CNewEvent> {
   void initState() {
     _nameInputController.addListener(() {
       setState(() {
-        name = _nameInputController.text.toLowerCase();
+        name = _nameInputController.text;
       });
     });
 
@@ -88,6 +87,7 @@ class _CNewEventState extends State<_CNewEvent> {
       children: [
         CTextInput(hintText: "Event Name", controller: _nameInputController),
         const SizedBox(height: 20),
+        CText.subtitle("Date"),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -116,31 +116,51 @@ class _CNewEventState extends State<_CNewEvent> {
             ),
           ],
         ),
+        SizedBox(
+          height: 20,
+        ),
         // ListView( primary: true, shrinkWrap: true, children: [
         //     Wrap(
         //       alignment: WrapAlignment.center, spacing: 3, runSpacing: 3,
         //       children: images.map((e) => Image.network(e, width: 100, height: 100 )).toList())]),
-        CListTile(label: group?.name ?? ""),
-        CPopupMenu<CEventGroup>(
-            items: groups
-                .map(
-                  (e) => PopupMenuItem<CEventGroup>(
-                    child: Text(e.name),
-                    value: e,
-                  ),
-                )
-                .toList(),
-            onSelected: (selectedGroup) {
-              setState(() {
-                group = selectedGroup;
-              });
-            }),
+        CText.subtitle("Group"),
+        // Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CText.label(group?.name ?? "Select a group...",
+                color: group == null ? CColors.faded : CColors.white),
+            CPopupMenu<CEventGroup>(
+              items: groups
+                  .map(
+                    (e) => PopupMenuItem<CEventGroup>(
+                      child: Text(e.name),
+                      value: e,
+                    ),
+                  )
+                  .toList(),
+              onSelected: (selectedGroup) {
+                setState(
+                  () {
+                    group = selectedGroup;
+                  },
+                );
+              },
+            ),
+          ],
+        ),
         Spacer(),
         FloatingActionButton(
           onPressed: () {
             if (name == null || group == null || name!.isEmpty) return;
-            widget.onCreate(name!, date, group!);
-            Navigator.pop(context);
+            supabase.from("events").insert({
+              "name": name,
+              "group_id": group!.id,
+              "occurs_at": date.toIso8601String(),
+            }).then((value) {
+              widget.onCreate(name!, date, group!);
+              Navigator.pop(context);
+            });
           },
           backgroundColor: CColors.primary,
           child: CText.button("Create"),

@@ -60,7 +60,7 @@ class _CalendarScreenState extends State<_CalendarScreen> {
     return (DateTime selectedDay, DateTime focusedDay) {
       final dayEvents = events.where((element) =>
           DateUtils.dateOnly(element.Date) == DateUtils.dateOnly(selectedDay));
-      if (events.isEmpty) return;
+      if (dayEvents.isEmpty) return;
 
       final formattedDate = DateFormat("EEEE, d MMM `yy").format(selectedDay);
       showModalBottomSheet(
@@ -80,7 +80,7 @@ class _CalendarScreenState extends State<_CalendarScreen> {
                 Expanded(
                     child: CList(
                   label:
-                      "${events.length} Event${events.length > 1 ? "s" : ""}",
+                      "${dayEvents.length} Event${events.length > 1 ? "s" : ""}",
                   borders: true,
                   items: dayEvents
                       .map(

@@ -9,7 +9,10 @@ import "package:provider/provider.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
 
 class Chat {
-  const Chat({required this.name, required this.recentMessage, required this.recentMessageDate});
+  const Chat(
+      {required this.name,
+      required this.recentMessage,
+      required this.recentMessageDate});
 
   final String name;
   final String recentMessage;
@@ -21,7 +24,8 @@ class MessageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext _) {
-    return Consumer<ProfileModel>(builder: (_, profile, __) => _MessageScreen(profile: profile));
+    return Consumer<ProfileModel>(
+        builder: (_, profile, __) => _MessageScreen(profile: profile));
   }
 }
 
@@ -40,9 +44,7 @@ class _MessageScreenState extends State<_MessageScreen> {
 
   @override
   void initState() {
-    supabase
-      .from("profiles")
-      .select("""
+    supabase.from("profiles").select("""
         id,
         group_members!inner (
           groups (
@@ -53,9 +55,7 @@ class _MessageScreenState extends State<_MessageScreen> {
             )
           )
         )
-      """)
-      .eq("id", widget.profile.id)
-      .then((res) => print(res));
+      """).eq("id", widget.profile.id).then((res) => print(res));
     super.initState();
   }
 
@@ -66,7 +66,10 @@ class _MessageScreenState extends State<_MessageScreen> {
         padding: const EdgeInsets.only(left: 16),
         child: CText.subheading("Messages"),
       ),
-      body: CButtonPrimary(text: "Log chats", onPressed: () => print(chats),),
+      body: CButtonPrimary(
+        text: "Log chats",
+        onPressed: () => print(chats),
+      ),
     );
   }
 }
