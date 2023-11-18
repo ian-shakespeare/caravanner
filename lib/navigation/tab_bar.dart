@@ -37,8 +37,8 @@ class _CTabBarState extends State<CTabBar> {
       bottomNavigationBar: Container(
         alignment: AlignmentDirectional.center,
         height: 60,
-        padding: const EdgeInsets.only(top: 6),
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.only(top: 6, bottom: 12),
+        decoration: const BoxDecoration(
           color: CColors.surface,
         ),
         child: Row(
